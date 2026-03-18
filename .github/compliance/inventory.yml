@@ -1,5 +1,0 @@
-inventory:
-- source: DirectOwners
-  items:
-  - id: duschroe@microsoft.com
-  isProduction: false
