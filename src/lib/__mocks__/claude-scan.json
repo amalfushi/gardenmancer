@@ -1,0 +1,17 @@
+{
+  "name": "Cherry Tomato",
+  "species": "Solanum lycopersicum",
+  "spacing": 24,
+  "sunNeeds": "full",
+  "daysToMaturity": 65,
+  "heightCategory": "medium",
+  "waterNeeds": "medium",
+  "companionPlants": ["basil", "carrots", "parsley"],
+  "zones": [3, 4, 5, 6, 7, 8, 9, 10],
+  "plantingWindows": {
+    "startIndoors": "6-8 weeks before last frost",
+    "transplant": "After last frost date",
+    "directSow": null
+  },
+  "source": "scan"
+}

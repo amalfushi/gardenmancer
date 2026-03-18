@@ -1,0 +1,831 @@
+[
+  {
+    "id": "tomato-cherry",
+    "name": "Cherry Tomato",
+    "species": "Solanum lycopersicum",
+    "spacing": 24,
+    "sunNeeds": "full",
+    "daysToMaturity": 65,
+    "heightCategory": "tall",
+    "waterNeeds": "medium",
+    "companionPlants": ["basil-sweet", "marigold", "carrot"],
+    "zones": [3, 4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "startIndoors": "6-8 weeks before last frost",
+      "transplant": "After last frost",
+      "directSow": "Not recommended"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "tomato-beefsteak",
+    "name": "Beefsteak Tomato",
+    "species": "Solanum lycopersicum",
+    "spacing": 36,
+    "sunNeeds": "full",
+    "daysToMaturity": 85,
+    "heightCategory": "tall",
+    "waterNeeds": "medium",
+    "companionPlants": ["basil-sweet", "parsley", "carrot"],
+    "zones": [3, 4, 5, 6, 7, 8, 9],
+    "plantingWindows": {
+      "startIndoors": "6-8 weeks before last frost",
+      "transplant": "After last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "pepper-bell",
+    "name": "Bell Pepper",
+    "species": "Capsicum annuum",
+    "spacing": 18,
+    "sunNeeds": "full",
+    "daysToMaturity": 75,
+    "heightCategory": "medium",
+    "waterNeeds": "medium",
+    "companionPlants": ["tomato-cherry", "basil-sweet", "carrot"],
+    "zones": [3, 4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "startIndoors": "8-10 weeks before last frost",
+      "transplant": "2 weeks after last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "pepper-jalapeno",
+    "name": "Jalapeño Pepper",
+    "species": "Capsicum annuum",
+    "spacing": 14,
+    "sunNeeds": "full",
+    "daysToMaturity": 70,
+    "heightCategory": "medium",
+    "waterNeeds": "medium",
+    "companionPlants": ["tomato-cherry", "basil-sweet", "oregano"],
+    "zones": [3, 4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "startIndoors": "8-10 weeks before last frost",
+      "transplant": "2 weeks after last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "cucumber-slicing",
+    "name": "Slicing Cucumber",
+    "species": "Cucumis sativus",
+    "spacing": 36,
+    "sunNeeds": "full",
+    "daysToMaturity": 58,
+    "heightCategory": "vine",
+    "waterNeeds": "high",
+    "companionPlants": ["peas-snap", "beans-green", "sunflower"],
+    "zones": [3, 4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "directSow": "After last frost when soil is 60°F+"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "lettuce-butterhead",
+    "name": "Butterhead Lettuce",
+    "species": "Lactuca sativa",
+    "spacing": 10,
+    "sunNeeds": "partial",
+    "daysToMaturity": 55,
+    "heightCategory": "short",
+    "waterNeeds": "medium",
+    "companionPlants": ["carrot", "radish", "chives"],
+    "zones": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "startIndoors": "4-6 weeks before last frost",
+      "directSow": "2-4 weeks before last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "carrot",
+    "name": "Carrot",
+    "species": "Daucus carota",
+    "spacing": 3,
+    "sunNeeds": "full",
+    "daysToMaturity": 70,
+    "heightCategory": "short",
+    "waterNeeds": "medium",
+    "companionPlants": ["lettuce-butterhead", "rosemary", "onion-yellow"],
+    "zones": [3, 4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "directSow": "2-3 weeks before last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "beans-green",
+    "name": "Green Beans",
+    "species": "Phaseolus vulgaris",
+    "spacing": 4,
+    "sunNeeds": "full",
+    "daysToMaturity": 55,
+    "heightCategory": "medium",
+    "waterNeeds": "medium",
+    "companionPlants": ["corn-sweet", "cucumber-slicing", "potato"],
+    "zones": [3, 4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "directSow": "After last frost when soil is 60°F+"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "peas-snap",
+    "name": "Sugar Snap Peas",
+    "species": "Pisum sativum",
+    "spacing": 3,
+    "sunNeeds": "full",
+    "daysToMaturity": 60,
+    "heightCategory": "vine",
+    "waterNeeds": "medium",
+    "companionPlants": ["carrot", "radish", "cucumber-slicing"],
+    "zones": [3, 4, 5, 6, 7, 8],
+    "plantingWindows": {
+      "directSow": "4-6 weeks before last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "squash-butternut",
+    "name": "Butternut Squash",
+    "species": "Cucurbita moschata",
+    "spacing": 48,
+    "sunNeeds": "full",
+    "daysToMaturity": 100,
+    "heightCategory": "vine",
+    "waterNeeds": "medium",
+    "companionPlants": ["corn-sweet", "beans-green", "nasturtium"],
+    "zones": [3, 4, 5, 6, 7, 8, 9],
+    "plantingWindows": {
+      "startIndoors": "3-4 weeks before last frost",
+      "directSow": "After last frost when soil is 65°F+"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "zucchini",
+    "name": "Zucchini",
+    "species": "Cucurbita pepo",
+    "spacing": 36,
+    "sunNeeds": "full",
+    "daysToMaturity": 50,
+    "heightCategory": "medium",
+    "waterNeeds": "medium",
+    "companionPlants": ["corn-sweet", "beans-green", "nasturtium"],
+    "zones": [3, 4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "directSow": "After last frost when soil is 60°F+"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "corn-sweet",
+    "name": "Sweet Corn",
+    "species": "Zea mays",
+    "spacing": 12,
+    "sunNeeds": "full",
+    "daysToMaturity": 80,
+    "heightCategory": "tall",
+    "waterNeeds": "high",
+    "companionPlants": ["beans-green", "squash-butternut", "peas-snap"],
+    "zones": [3, 4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "directSow": "After last frost when soil is 60°F+"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "onion-yellow",
+    "name": "Yellow Onion",
+    "species": "Allium cepa",
+    "spacing": 4,
+    "sunNeeds": "full",
+    "daysToMaturity": 100,
+    "heightCategory": "short",
+    "waterNeeds": "medium",
+    "companionPlants": ["carrot", "lettuce-butterhead", "tomato-cherry"],
+    "zones": [3, 4, 5, 6, 7, 8, 9],
+    "plantingWindows": {
+      "startIndoors": "8-10 weeks before last frost",
+      "directSow": "4 weeks before last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "garlic",
+    "name": "Garlic",
+    "species": "Allium sativum",
+    "spacing": 6,
+    "sunNeeds": "full",
+    "daysToMaturity": 240,
+    "heightCategory": "short",
+    "waterNeeds": "low",
+    "companionPlants": ["tomato-cherry", "pepper-bell", "spinach"],
+    "zones": [3, 4, 5, 6, 7, 8],
+    "plantingWindows": {
+      "directSow": "Fall planting, 4-6 weeks before ground freezes"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "potato",
+    "name": "Potato",
+    "species": "Solanum tuberosum",
+    "spacing": 12,
+    "sunNeeds": "full",
+    "daysToMaturity": 90,
+    "heightCategory": "medium",
+    "waterNeeds": "medium",
+    "companionPlants": ["beans-green", "corn-sweet", "basil-sweet"],
+    "zones": [3, 4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "directSow": "2-4 weeks before last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "broccoli",
+    "name": "Broccoli",
+    "species": "Brassica oleracea var. italica",
+    "spacing": 18,
+    "sunNeeds": "full",
+    "daysToMaturity": 70,
+    "heightCategory": "medium",
+    "waterNeeds": "high",
+    "companionPlants": ["onion-yellow", "celery", "dill"],
+    "zones": [3, 4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "startIndoors": "6-8 weeks before last frost",
+      "transplant": "2-3 weeks before last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "cauliflower",
+    "name": "Cauliflower",
+    "species": "Brassica oleracea var. botrytis",
+    "spacing": 18,
+    "sunNeeds": "full",
+    "daysToMaturity": 80,
+    "heightCategory": "medium",
+    "waterNeeds": "high",
+    "companionPlants": ["celery", "onion-yellow", "spinach"],
+    "zones": [3, 4, 5, 6, 7, 8, 9],
+    "plantingWindows": {
+      "startIndoors": "6-8 weeks before last frost",
+      "transplant": "2-3 weeks before last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "spinach",
+    "name": "Spinach",
+    "species": "Spinacia oleracea",
+    "spacing": 6,
+    "sunNeeds": "partial",
+    "daysToMaturity": 45,
+    "heightCategory": "ground",
+    "waterNeeds": "medium",
+    "companionPlants": ["peas-snap", "strawberry", "lettuce-butterhead"],
+    "zones": [2, 3, 4, 5, 6, 7, 8, 9],
+    "plantingWindows": {
+      "directSow": "4-6 weeks before last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "kale",
+    "name": "Kale",
+    "species": "Brassica oleracea var. sabellica",
+    "spacing": 18,
+    "sunNeeds": "full",
+    "daysToMaturity": 55,
+    "heightCategory": "medium",
+    "waterNeeds": "medium",
+    "companionPlants": ["beet", "celery", "onion-yellow"],
+    "zones": [2, 3, 4, 5, 6, 7, 8, 9],
+    "plantingWindows": {
+      "startIndoors": "4-6 weeks before last frost",
+      "directSow": "2-4 weeks before last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "radish",
+    "name": "Radish",
+    "species": "Raphanus sativus",
+    "spacing": 2,
+    "sunNeeds": "full",
+    "daysToMaturity": 25,
+    "heightCategory": "ground",
+    "waterNeeds": "medium",
+    "companionPlants": ["carrot", "lettuce-butterhead", "peas-snap"],
+    "zones": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "directSow": "4-6 weeks before last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "beet",
+    "name": "Beet",
+    "species": "Beta vulgaris",
+    "spacing": 4,
+    "sunNeeds": "full",
+    "daysToMaturity": 55,
+    "heightCategory": "short",
+    "waterNeeds": "medium",
+    "companionPlants": ["onion-yellow", "lettuce-butterhead", "garlic"],
+    "zones": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "directSow": "2-4 weeks before last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "eggplant",
+    "name": "Eggplant",
+    "species": "Solanum melongena",
+    "spacing": 24,
+    "sunNeeds": "full",
+    "daysToMaturity": 80,
+    "heightCategory": "medium",
+    "waterNeeds": "medium",
+    "companionPlants": ["pepper-bell", "basil-sweet", "beans-green"],
+    "zones": [5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "startIndoors": "8-10 weeks before last frost",
+      "transplant": "2-3 weeks after last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "celery",
+    "name": "Celery",
+    "species": "Apium graveolens",
+    "spacing": 8,
+    "sunNeeds": "full",
+    "daysToMaturity": 130,
+    "heightCategory": "medium",
+    "waterNeeds": "high",
+    "companionPlants": ["tomato-cherry", "beans-green", "broccoli"],
+    "zones": [3, 4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "startIndoors": "10-12 weeks before last frost",
+      "transplant": "After last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "asparagus",
+    "name": "Asparagus",
+    "species": "Asparagus officinalis",
+    "spacing": 18,
+    "sunNeeds": "full",
+    "daysToMaturity": 730,
+    "heightCategory": "tall",
+    "waterNeeds": "medium",
+    "companionPlants": ["tomato-cherry", "parsley", "basil-sweet"],
+    "zones": [3, 4, 5, 6, 7, 8],
+    "plantingWindows": {
+      "directSow": "Early spring as soon as soil is workable"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "sweet-potato",
+    "name": "Sweet Potato",
+    "species": "Ipomoea batatas",
+    "spacing": 12,
+    "sunNeeds": "full",
+    "daysToMaturity": 100,
+    "heightCategory": "vine",
+    "waterNeeds": "medium",
+    "companionPlants": ["beans-green", "thyme", "oregano"],
+    "zones": [5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "transplant": "3-4 weeks after last frost when soil is 65°F+"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "basil-sweet",
+    "name": "Sweet Basil",
+    "species": "Ocimum basilicum",
+    "spacing": 12,
+    "sunNeeds": "full",
+    "daysToMaturity": 60,
+    "heightCategory": "short",
+    "waterNeeds": "medium",
+    "companionPlants": ["tomato-cherry", "pepper-bell", "oregano"],
+    "zones": [4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "startIndoors": "6 weeks before last frost",
+      "directSow": "After last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "cilantro",
+    "name": "Cilantro",
+    "species": "Coriandrum sativum",
+    "spacing": 6,
+    "sunNeeds": "partial",
+    "daysToMaturity": 50,
+    "heightCategory": "short",
+    "waterNeeds": "medium",
+    "companionPlants": ["tomato-cherry", "spinach", "peas-snap"],
+    "zones": [3, 4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "directSow": "2-4 weeks before last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "parsley",
+    "name": "Parsley",
+    "species": "Petroselinum crispum",
+    "spacing": 8,
+    "sunNeeds": "partial",
+    "daysToMaturity": 75,
+    "heightCategory": "short",
+    "waterNeeds": "medium",
+    "companionPlants": ["tomato-cherry", "asparagus", "carrot"],
+    "zones": [3, 4, 5, 6, 7, 8, 9],
+    "plantingWindows": {
+      "startIndoors": "8-10 weeks before last frost",
+      "directSow": "3-4 weeks before last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "dill",
+    "name": "Dill",
+    "species": "Anethum graveolens",
+    "spacing": 12,
+    "sunNeeds": "full",
+    "daysToMaturity": 55,
+    "heightCategory": "medium",
+    "waterNeeds": "low",
+    "companionPlants": ["cucumber-slicing", "lettuce-butterhead", "broccoli"],
+    "zones": [3, 4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "directSow": "After last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "mint",
+    "name": "Mint",
+    "species": "Mentha spicata",
+    "spacing": 18,
+    "sunNeeds": "partial",
+    "daysToMaturity": 90,
+    "heightCategory": "short",
+    "waterNeeds": "high",
+    "companionPlants": ["tomato-cherry", "pepper-bell", "broccoli"],
+    "zones": [3, 4, 5, 6, 7, 8, 9, 10, 11],
+    "plantingWindows": {
+      "transplant": "After last frost",
+      "directSow": "After last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "rosemary",
+    "name": "Rosemary",
+    "species": "Salvia rosmarinus",
+    "spacing": 24,
+    "sunNeeds": "full",
+    "daysToMaturity": 120,
+    "heightCategory": "medium",
+    "waterNeeds": "low",
+    "companionPlants": ["sage", "thyme", "carrot"],
+    "zones": [7, 8, 9, 10],
+    "plantingWindows": {
+      "startIndoors": "10-12 weeks before last frost",
+      "transplant": "After last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "thyme",
+    "name": "Thyme",
+    "species": "Thymus vulgaris",
+    "spacing": 12,
+    "sunNeeds": "full",
+    "daysToMaturity": 85,
+    "heightCategory": "ground",
+    "waterNeeds": "low",
+    "companionPlants": ["rosemary", "sage", "strawberry"],
+    "zones": [5, 6, 7, 8, 9],
+    "plantingWindows": {
+      "startIndoors": "8-10 weeks before last frost",
+      "transplant": "After last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "oregano",
+    "name": "Oregano",
+    "species": "Origanum vulgare",
+    "spacing": 12,
+    "sunNeeds": "full",
+    "daysToMaturity": 80,
+    "heightCategory": "short",
+    "waterNeeds": "low",
+    "companionPlants": ["basil-sweet", "pepper-bell", "tomato-cherry"],
+    "zones": [5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "startIndoors": "6-8 weeks before last frost",
+      "transplant": "After last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "sage",
+    "name": "Sage",
+    "species": "Salvia officinalis",
+    "spacing": 24,
+    "sunNeeds": "full",
+    "daysToMaturity": 75,
+    "heightCategory": "short",
+    "waterNeeds": "low",
+    "companionPlants": ["rosemary", "thyme", "carrot"],
+    "zones": [4, 5, 6, 7, 8],
+    "plantingWindows": {
+      "startIndoors": "6-8 weeks before last frost",
+      "directSow": "After last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "chives",
+    "name": "Chives",
+    "species": "Allium schoenoprasum",
+    "spacing": 8,
+    "sunNeeds": "full",
+    "daysToMaturity": 80,
+    "heightCategory": "short",
+    "waterNeeds": "medium",
+    "companionPlants": ["carrot", "tomato-cherry", "lettuce-butterhead"],
+    "zones": [3, 4, 5, 6, 7, 8, 9],
+    "plantingWindows": {
+      "startIndoors": "8-10 weeks before last frost",
+      "directSow": "4 weeks before last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "lavender",
+    "name": "Lavender",
+    "species": "Lavandula angustifolia",
+    "spacing": 18,
+    "sunNeeds": "full",
+    "daysToMaturity": 110,
+    "heightCategory": "short",
+    "waterNeeds": "low",
+    "companionPlants": ["rosemary", "thyme", "sage"],
+    "zones": [5, 6, 7, 8, 9],
+    "plantingWindows": {
+      "startIndoors": "10-12 weeks before last frost",
+      "transplant": "After last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "sunflower",
+    "name": "Sunflower",
+    "species": "Helianthus annuus",
+    "spacing": 24,
+    "sunNeeds": "full",
+    "daysToMaturity": 80,
+    "heightCategory": "tall",
+    "waterNeeds": "medium",
+    "companionPlants": ["cucumber-slicing", "corn-sweet", "squash-butternut"],
+    "zones": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "directSow": "After last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "marigold",
+    "name": "Marigold",
+    "species": "Tagetes patula",
+    "spacing": 10,
+    "sunNeeds": "full",
+    "daysToMaturity": 50,
+    "heightCategory": "short",
+    "waterNeeds": "low",
+    "companionPlants": ["tomato-cherry", "pepper-bell", "beans-green"],
+    "zones": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    "plantingWindows": {
+      "startIndoors": "6-8 weeks before last frost",
+      "directSow": "After last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "zinnia",
+    "name": "Zinnia",
+    "species": "Zinnia elegans",
+    "spacing": 12,
+    "sunNeeds": "full",
+    "daysToMaturity": 60,
+    "heightCategory": "medium",
+    "waterNeeds": "low",
+    "companionPlants": ["marigold", "sunflower", "cosmos"],
+    "zones": [3, 4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "directSow": "After last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "petunia",
+    "name": "Petunia",
+    "species": "Petunia × atkinsiana",
+    "spacing": 12,
+    "sunNeeds": "full",
+    "daysToMaturity": 70,
+    "heightCategory": "ground",
+    "waterNeeds": "medium",
+    "companionPlants": ["basil-sweet", "tomato-cherry", "marigold"],
+    "zones": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    "plantingWindows": {
+      "startIndoors": "10-12 weeks before last frost",
+      "transplant": "After last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "daisy-shasta",
+    "name": "Shasta Daisy",
+    "species": "Leucanthemum × superbum",
+    "spacing": 18,
+    "sunNeeds": "full",
+    "daysToMaturity": 120,
+    "heightCategory": "medium",
+    "waterNeeds": "low",
+    "companionPlants": ["lavender", "sage", "cosmos"],
+    "zones": [5, 6, 7, 8, 9],
+    "plantingWindows": {
+      "startIndoors": "8-10 weeks before last frost",
+      "transplant": "After last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "snapdragon",
+    "name": "Snapdragon",
+    "species": "Antirrhinum majus",
+    "spacing": 10,
+    "sunNeeds": "full",
+    "daysToMaturity": 80,
+    "heightCategory": "medium",
+    "waterNeeds": "medium",
+    "companionPlants": ["marigold", "petunia", "zinnia"],
+    "zones": [5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "startIndoors": "8-10 weeks before last frost",
+      "transplant": "2-4 weeks before last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "cosmos",
+    "name": "Cosmos",
+    "species": "Cosmos bipinnatus",
+    "spacing": 18,
+    "sunNeeds": "full",
+    "daysToMaturity": 60,
+    "heightCategory": "tall",
+    "waterNeeds": "low",
+    "companionPlants": ["zinnia", "marigold", "sunflower"],
+    "zones": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    "plantingWindows": {
+      "directSow": "After last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "nasturtium",
+    "name": "Nasturtium",
+    "species": "Tropaeolum majus",
+    "spacing": 12,
+    "sunNeeds": "full",
+    "daysToMaturity": 55,
+    "heightCategory": "vine",
+    "waterNeeds": "low",
+    "companionPlants": ["cucumber-slicing", "squash-butternut", "beans-green"],
+    "zones": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    "plantingWindows": {
+      "directSow": "After last frost"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "strawberry",
+    "name": "Strawberry",
+    "species": "Fragaria × ananassa",
+    "spacing": 12,
+    "sunNeeds": "full",
+    "daysToMaturity": 90,
+    "heightCategory": "ground",
+    "waterNeeds": "high",
+    "companionPlants": ["spinach", "lettuce-butterhead", "thyme"],
+    "zones": [3, 4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "transplant": "Early spring as soon as soil is workable"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "watermelon",
+    "name": "Watermelon",
+    "species": "Citrullus lanatus",
+    "spacing": 60,
+    "sunNeeds": "full",
+    "daysToMaturity": 85,
+    "heightCategory": "vine",
+    "waterNeeds": "high",
+    "companionPlants": ["corn-sweet", "sunflower", "nasturtium"],
+    "zones": [4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "startIndoors": "3-4 weeks before last frost",
+      "directSow": "After last frost when soil is 70°F+"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "cantaloupe",
+    "name": "Cantaloupe",
+    "species": "Cucumis melo var. cantalupensis",
+    "spacing": 36,
+    "sunNeeds": "full",
+    "daysToMaturity": 80,
+    "heightCategory": "vine",
+    "waterNeeds": "high",
+    "companionPlants": ["corn-sweet", "sunflower", "lettuce-butterhead"],
+    "zones": [4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "startIndoors": "3-4 weeks before last frost",
+      "directSow": "After last frost when soil is 65°F+"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "blueberry",
+    "name": "Blueberry",
+    "species": "Vaccinium corymbosum",
+    "spacing": 60,
+    "sunNeeds": "full",
+    "daysToMaturity": 365,
+    "heightCategory": "medium",
+    "waterNeeds": "high",
+    "companionPlants": ["strawberry", "thyme", "basil-sweet"],
+    "zones": [3, 4, 5, 6, 7, 8],
+    "plantingWindows": {
+      "transplant": "Early spring or late fall"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "raspberry",
+    "name": "Raspberry",
+    "species": "Rubus idaeus",
+    "spacing": 36,
+    "sunNeeds": "full",
+    "daysToMaturity": 365,
+    "heightCategory": "tall",
+    "waterNeeds": "medium",
+    "companionPlants": ["garlic", "marigold", "chives"],
+    "zones": [3, 4, 5, 6, 7, 8],
+    "plantingWindows": {
+      "transplant": "Early spring before buds break"
+    },
+    "source": "seed"
+  },
+  {
+    "id": "lettuce-romaine",
+    "name": "Romaine Lettuce",
+    "species": "Lactuca sativa var. longifolia",
+    "spacing": 8,
+    "sunNeeds": "partial",
+    "daysToMaturity": 60,
+    "heightCategory": "short",
+    "waterNeeds": "medium",
+    "companionPlants": ["carrot", "chives", "radish"],
+    "zones": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "plantingWindows": {
+      "startIndoors": "4-6 weeks before last frost",
+      "directSow": "2-4 weeks before last frost"
+    },
+    "source": "seed"
+  }
+]

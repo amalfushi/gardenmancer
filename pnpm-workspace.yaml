@@ -1,0 +1,7 @@
+ignoredBuiltDependencies:
+  - '@swc/core'
+  - core-js-pure
+  - cypress
+  - esbuild
+  - sharp
+  - unrs-resolver

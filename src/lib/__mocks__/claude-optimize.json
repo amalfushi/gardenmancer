@@ -1,0 +1,21 @@
+{
+  "suggestions": [
+    {
+      "type": "spacing",
+      "message": "Tomatoes need 24 inches between plants. Consider moving the basil closer as a companion plant.",
+      "severity": "warning"
+    },
+    {
+      "type": "height",
+      "message": "Place tall plants (tomatoes, corn) on the north side to avoid shading shorter plants.",
+      "severity": "info"
+    },
+    {
+      "type": "companion",
+      "message": "Basil is an excellent companion for tomatoes - keeps pests away and improves flavor.",
+      "severity": "success"
+    }
+  ],
+  "overallScore": 72,
+  "maxScore": 100
+}
