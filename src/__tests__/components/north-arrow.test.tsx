@@ -1,29 +1,6 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { MantineProvider } from '@mantine/core'
-
-// Mock react-konva since it requires Canvas in tests
-vi.mock('react-konva', () => ({
-  Stage: ({ children, ...props }: Record<string, unknown>) => (
-    <div data-testid="stage" {...props}>
-      {children as React.ReactNode}
-    </div>
-  ),
-  Layer: ({ children }: Record<string, unknown>) => (
-    <div data-testid="layer">{children as React.ReactNode}</div>
-  ),
-  Rect: (props: Record<string, unknown>) => <div data-testid="rect" {...props} />,
-  Line: (props: Record<string, unknown>) => <div data-testid="line" {...props} />,
-  Text: (props: Record<string, unknown>) => (
-    <div data-testid="konva-text">{props.text as string}</div>
-  ),
-  Circle: (props: Record<string, unknown>) => <div data-testid="circle" {...props} />,
-  Group: ({ children, ...props }: Record<string, unknown>) => (
-    <div data-testid="group" {...props}>
-      {children as React.ReactNode}
-    </div>
-  ),
-}))
 
 import { NorthArrow } from '@/components/north-arrow'
 
@@ -33,52 +10,41 @@ function renderWithMantine(ui: React.ReactElement) {
 
 describe('NorthArrow', () => {
   it('renders the "N" label', () => {
-    renderWithMantine(<NorthArrow rotationDegrees={0} />)
+    renderWithMantine(<NorthArrow />)
     expect(screen.getByText('N')).toBeInTheDocument()
   })
 
-  it('renders with default position and size', () => {
-    const { container } = renderWithMantine(<NorthArrow rotationDegrees={0} />)
-    const groups = container.querySelectorAll('[data-testid="group"]')
-    expect(groups.length).toBeGreaterThanOrEqual(1)
+  it('renders an SVG element with aria-label', () => {
+    const { container } = renderWithMantine(<NorthArrow />)
+    const svg = container.querySelector('svg')
+    expect(svg).toBeInTheDocument()
+    expect(svg).toHaveAttribute('aria-label', 'North indicator')
   })
 
-  it('renders with various rotation angles without errors', () => {
-    const angles = [0, 45, 90, 135, 180, 225, 270, 315, 360]
-    for (const degrees of angles) {
-      const { unmount } = renderWithMantine(<NorthArrow rotationDegrees={degrees} />)
-      expect(screen.getByText('N')).toBeInTheDocument()
-      unmount()
-    }
+  it('renders with default size', () => {
+    const { container } = renderWithMantine(<NorthArrow />)
+    const svg = container.querySelector('svg')
+    expect(svg).toHaveAttribute('width', '32')
+    expect(svg).toHaveAttribute('height', '32')
   })
 
-  it('applies custom position and size', () => {
-    renderWithMantine(<NorthArrow rotationDegrees={180} x={50} y={50} size={40} />)
-    expect(screen.getByText('N')).toBeInTheDocument()
+  it('renders with custom size', () => {
+    const { container } = renderWithMantine(<NorthArrow size={48} />)
+    const svg = container.querySelector('svg')
+    expect(svg).toHaveAttribute('width', '48')
+    expect(svg).toHaveAttribute('height', '48')
   })
 
-  it('applies correct rotation for degree values', () => {
-    // rotationDegrees=0 → arrow rotation=-0 (north at top)
-    // rotationDegrees=90 → arrow rotation=-90
-    // rotationDegrees=180 → arrow rotation=-180
-    const testCases = [
-      { degrees: 0, expectedRotation: 0 },
-      { degrees: 90, expectedRotation: -90 },
-      { degrees: 180, expectedRotation: -180 },
-      { degrees: 270, expectedRotation: -270 },
-    ]
-
-    for (const { degrees, expectedRotation } of testCases) {
-      const { container, unmount } = renderWithMantine(<NorthArrow rotationDegrees={degrees} />)
-      const outerGroup = container.querySelector('[data-testid="group"]')
-      expect(outerGroup).toHaveAttribute('rotation', String(expectedRotation))
-      unmount()
-    }
+  it('always points north (no rotation applied)', () => {
+    const { container } = renderWithMantine(<NorthArrow />)
+    const svg = container.querySelector('svg')
+    // SVG should not have a transform/rotation — it always points up
+    expect(svg?.getAttribute('transform')).toBeNull()
   })
 
-  it('supports arbitrary angles like 45°', () => {
-    const { container } = renderWithMantine(<NorthArrow rotationDegrees={45} />)
-    const outerGroup = container.querySelector('[data-testid="group"]')
-    expect(outerGroup).toHaveAttribute('rotation', String(-45))
+  it('contains north arrow polygon and south arrow polygon', () => {
+    const { container } = renderWithMantine(<NorthArrow />)
+    const polygons = container.querySelectorAll('polygon')
+    expect(polygons.length).toBe(2)
   })
 })

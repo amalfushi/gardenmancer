@@ -11,6 +11,7 @@ import {
   CELLS_PER_FOOT,
 } from '@/lib/garden-utils'
 import { NorthArrow } from '@/components/north-arrow'
+import { PlantColorLegend } from '@/components/plant-color-legend'
 
 export interface GardenCanvasProps {
   /** Garden width in feet */
@@ -25,6 +26,8 @@ export interface GardenCanvasProps {
   selectedPlant?: Plant | null
   /** Callback when a cell is clicked to place a plant */
   onPlacePlant?: (placement: PlantPlacement) => void
+  /** Callback when a plant is drag-and-dropped to a new cell */
+  onMovePlant?: (fromIndex: number, toGridX: number, toGridY: number) => void
   /** Whether to show spacing circles */
   showSpacing?: boolean
   /** Shade zones to render */
@@ -33,6 +36,8 @@ export interface GardenCanvasProps {
   gardenType?: GardenType
   /** Garden rotation in degrees for north arrow compass (0 = north) */
   rotationDegrees?: number
+  /** Whether the canvas is in fullscreen mode */
+  fullscreen?: boolean
 }
 
 const PLANT_COLORS: Record<string, string> = {
@@ -50,6 +55,16 @@ function getPlantColor(plant?: Plant): string {
   return PLANT_COLORS[plant.heightCategory] ?? DEFAULT_PLANT_COLOR
 }
 
+/** Get appropriate label length based on available cell size at current scale */
+function getPlantLabel(plant: Plant | undefined, isLargeViewport: boolean): string {
+  if (!plant) return '?'
+  if (isLargeViewport) {
+    // Show longer label on large viewports (up to 8 chars)
+    return plant.name.length <= 8 ? plant.name : plant.name.substring(0, 7) + '…'
+  }
+  return plant.name.substring(0, 3)
+}
+
 export function GardenCanvas({
   width,
   length,
@@ -57,13 +72,16 @@ export function GardenCanvas({
   plantCatalog = [],
   selectedPlant = null,
   onPlacePlant,
+  onMovePlant,
   showSpacing = true,
   shadeZones = [],
   gardenType,
   rotationDegrees = 0,
+  fullscreen = false,
 }: GardenCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
+  const [isLargeViewport, setIsLargeViewport] = useState(false)
 
   const cols = width * CELLS_PER_FOOT
   const rows = length * CELLS_PER_FOOT
@@ -85,14 +103,18 @@ export function GardenCanvas({
       if (!containerRef.current) return
       const containerWidth = containerRef.current.offsetWidth
       const totalWidth = boundingWidth + 8
-      const newScale = Math.min(1, containerWidth / totalWidth)
+      const large = containerWidth >= 800
+      setIsLargeViewport(large)
+      // On large viewports or fullscreen, allow upscaling beyond 1.0
+      const maxScale = fullscreen ? 2.5 : large ? 1.5 : 1
+      const newScale = Math.min(maxScale, containerWidth / totalWidth)
       setScale(newScale)
     }
 
     handleResize()
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [boundingWidth])
+  }, [boundingWidth, fullscreen])
 
   const findPlant = useCallback(
     (plantId: string) => plantCatalog.find((p) => p.id === plantId),
@@ -156,6 +178,31 @@ export function GardenCanvas({
     }
   }
 
+  // Handle drag-and-drop of placed plants
+  const handlePlantDragEnd = useCallback(
+    (e: KonvaEventObject<DragEvent>, plantIndex: number) => {
+      if (!onMovePlant) return
+      const node = e.target
+      const stage = node.getStage()
+      if (!stage) return
+
+      // The drag happened inside the rotated group, so node position is in group-local coords
+      const newX = node.x()
+      const newY = node.y()
+
+      // Convert center position back to grid coordinates
+      const gridX = Math.round((newX - labelMargin - CELL_SIZE / 2) / CELL_SIZE)
+      const gridY = Math.round((newY - labelMargin - CELL_SIZE / 2) / CELL_SIZE)
+
+      // Clamp to grid bounds
+      const clampedX = Math.max(0, Math.min(cols - 1, gridX))
+      const clampedY = Math.max(0, Math.min(rows - 1, gridY))
+
+      onMovePlant(plantIndex, clampedX, clampedY)
+    },
+    [onMovePlant, labelMargin, cols, rows],
+  )
+
   // Center of the garden content for rotation pivot
   const contentCenterX = labelMargin + canvasWidth / 2
   const contentCenterY = labelMargin + canvasHeight / 2
@@ -168,14 +215,48 @@ export function GardenCanvas({
   const stageCenterX = (boundingWidth + 8) / 2
   const stageCenterY = (boundingHeight + 8) / 2
 
+  // Determine if dimension labels should flip (when garden is rotated ~180°)
+  const normalizedRot = ((rotationDegrees % 360) + 360) % 360
+  const shouldFlipLabels = normalizedRot > 90 && normalizedRot < 270
+
+  // Label font size scales with viewport
+  const labelFontSize = isLargeViewport ? 11 : 8
+  const dimFontSize = isLargeViewport ? 11 : 10
+
   return (
     <div
       ref={containerRef}
-      style={{ width: '100%' }}
+      style={{
+        width: '100%',
+        position: 'relative',
+        ...(fullscreen
+          ? {
+              position: 'fixed',
+              inset: 0,
+              zIndex: 1000,
+              backgroundColor: '#fff',
+              overflow: 'auto',
+              padding: 16,
+            }
+          : {}),
+      }}
       data-testid="garden-canvas"
       role="img"
       aria-label={`Garden layout canvas, ${width} by ${length} feet, rotated ${rotationDegrees}°, with ${plants.length} plant${plants.length !== 1 ? 's' : ''} placed`}
     >
+      {/* Header row: legend left, north arrow right */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          marginBottom: 8,
+        }}
+      >
+        <PlantColorLegend />
+        <NorthArrow size={32} />
+      </div>
+
       <Stage
         width={stageWidth}
         height={stageHeight}
@@ -234,31 +315,45 @@ export function GardenCanvas({
               />
             ))}
 
-            {/* Column labels (feet) */}
-            {Array.from({ length: width }, (_, i) => (
-              <Text
-                key={`cl-${i}`}
-                x={labelMargin + i * CELLS_PER_FOOT * CELL_SIZE}
-                y={4}
-                width={CELLS_PER_FOOT * CELL_SIZE}
-                text={`${i + 1}ft`}
-                fontSize={10}
-                fill="#166534"
-                align="center"
-              />
-            ))}
+            {/* Column labels (feet) — counter-rotated to stay readable */}
+            {Array.from({ length: width }, (_, i) => {
+              const lx =
+                labelMargin + i * CELLS_PER_FOOT * CELL_SIZE + (CELLS_PER_FOOT * CELL_SIZE) / 2
+              const ly = shouldFlipLabels ? labelMargin + canvasHeight + 14 : 4 + dimFontSize / 2
+              return (
+                <Text
+                  key={`cl-${i}`}
+                  x={lx}
+                  y={ly}
+                  text={`${i + 1}ft`}
+                  fontSize={dimFontSize}
+                  fill="#166534"
+                  align="center"
+                  rotation={-rotationDegrees}
+                  offsetX={0}
+                  offsetY={0}
+                />
+              )
+            })}
 
-            {/* Row labels (feet) */}
-            {Array.from({ length: length }, (_, i) => (
-              <Text
-                key={`rl-${i}`}
-                x={2}
-                y={labelMargin + i * CELLS_PER_FOOT * CELL_SIZE + CELL_SIZE / 2}
-                text={`${i + 1}ft`}
-                fontSize={10}
-                fill="#166534"
-              />
-            ))}
+            {/* Row labels (feet) — counter-rotated to stay readable */}
+            {Array.from({ length: length }, (_, i) => {
+              const lx = shouldFlipLabels ? labelMargin + canvasWidth + 4 : 2
+              const ly = labelMargin + i * CELLS_PER_FOOT * CELL_SIZE + CELL_SIZE / 2
+              return (
+                <Text
+                  key={`rl-${i}`}
+                  x={lx}
+                  y={ly}
+                  text={`${i + 1}ft`}
+                  fontSize={dimFontSize}
+                  fill="#166534"
+                  rotation={-rotationDegrees}
+                  offsetX={0}
+                  offsetY={0}
+                />
+              )
+            })}
 
             {/* Spacing footprint circles */}
             {spacingCircles.map((circle, idx) => {
@@ -292,41 +387,49 @@ export function GardenCanvas({
               />
             ))}
 
-            {/* Placed plants */}
+            {/* Placed plants — draggable when no plant is selected for placement */}
             {plants.map((placement, idx) => {
               const plant = findPlant(placement.plantId)
               const color = getPlantColor(plant)
               const cx = labelMargin + placement.gridX * CELL_SIZE + CELL_SIZE / 2
               const cy = labelMargin + placement.gridY * CELL_SIZE + CELL_SIZE / 2
-              const label = plant?.name?.substring(0, 3) ?? '?'
+              const label = getPlantLabel(plant, isLargeViewport)
               const hasConflict = conflictPositions.has(`${placement.gridX},${placement.gridY}`)
+              const isDraggable = !selectedPlant && !!onMovePlant
 
               return (
-                <Group key={`plant-${idx}`}>
+                <Group
+                  key={`plant-${idx}`}
+                  x={cx}
+                  y={cy}
+                  draggable={isDraggable}
+                  onDragEnd={(e) => handlePlantDragEnd(e, idx)}
+                  dragBoundFunc={(pos) => pos}
+                >
                   <Circle
-                    x={cx}
-                    y={cy}
+                    x={0}
+                    y={0}
                     radius={CELL_SIZE * 0.4}
                     fill={color}
                     stroke={hasConflict ? '#ef4444' : '#fff'}
                     strokeWidth={hasConflict ? 2 : 1}
                   />
+                  {/* Counter-rotate label so it always reads upright */}
                   <Text
-                    x={cx - CELL_SIZE / 2}
-                    y={cy + CELL_SIZE * 0.45}
-                    width={CELL_SIZE}
+                    x={0}
+                    y={CELL_SIZE * 0.45}
                     text={label}
-                    fontSize={8}
+                    fontSize={labelFontSize}
                     fill="#333"
                     align="center"
+                    width={isLargeViewport ? CELL_SIZE * 3 : CELL_SIZE}
+                    offsetX={isLargeViewport ? (CELL_SIZE * 3) / 2 : CELL_SIZE / 2}
+                    rotation={-rotationDegrees}
                   />
                 </Group>
               )
             })}
           </Group>
-
-          {/* North arrow compass indicator — stays fixed (not rotated with garden) */}
-          <NorthArrow rotationDegrees={rotationDegrees} x={4} y={4} size={22} />
         </Layer>
       </Stage>
     </div>
