@@ -50,6 +50,7 @@ export default function GardenDetailPage() {
   const [selectedPlant, setSelectedPlant] = useState<Plant | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [fullscreen, setFullscreen] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -101,6 +102,41 @@ export default function GardenDetailPage() {
         }
       } catch {
         notifications.show({ title: 'Error', message: 'Failed to place plant', color: 'red' })
+      }
+    },
+    [garden],
+  )
+
+  const handleMovePlant = useCallback(
+    async (fromIndex: number, toGridX: number, toGridY: number) => {
+      if (!garden) return
+      const currentLayout = garden.layout ?? []
+      if (fromIndex < 0 || fromIndex >= currentLayout.length) return
+
+      const updatedLayout = currentLayout.map((p, i) =>
+        i === fromIndex ? { ...p, gridX: toGridX, gridY: toGridY } : p,
+      )
+
+      // Optimistic update
+      setGarden((prev) => (prev ? { ...prev, layout: updatedLayout } : prev))
+
+      try {
+        const res = await fetch(`/api/gardens/${garden.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ layout: updatedLayout }),
+        })
+        if (res.ok) {
+          const updated = await res.json()
+          setGarden(updated)
+        } else {
+          // Revert on failure
+          setGarden((prev) => (prev ? { ...prev, layout: currentLayout } : prev))
+          notifications.show({ title: 'Error', message: 'Failed to move plant', color: 'red' })
+        }
+      } catch {
+        setGarden((prev) => (prev ? { ...prev, layout: currentLayout } : prev))
+        notifications.show({ title: 'Error', message: 'Failed to move plant', color: 'red' })
       }
     },
     [garden],
@@ -262,6 +298,9 @@ export default function GardenDetailPage() {
             <Badge color="green" variant="light" size="lg">
               {garden.layout?.length ?? 0} plants
             </Badge>
+            <Button size="xs" variant="light" color="blue" onClick={() => setFullscreen((f) => !f)}>
+              {fullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+            </Button>
             {(garden.layout?.length ?? 0) > 0 && (
               <Button size="xs" variant="light" color="red" onClick={handleClearLayout}>
                 Clear
@@ -327,9 +366,12 @@ export default function GardenDetailPage() {
               plantCatalog={plants}
               selectedPlant={selectedPlant}
               onPlacePlant={handlePlacePlant}
+              onMovePlant={handleMovePlant}
               shadeZones={shadeZones}
               gardenType={garden.type}
               rotationDegrees={garden.rotationDegrees}
+              fullscreen={fullscreen}
+              onExitFullscreen={() => setFullscreen(false)}
             />
           </Grid.Col>
         </Grid>

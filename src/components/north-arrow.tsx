@@ -1,68 +1,65 @@
 'use client'
 
-import { Group, Line, Text, Circle } from 'react-konva'
-
 export interface NorthArrowProps {
-  /** Garden rotation in degrees (0 = north at top, clockwise) */
-  rotationDegrees: number
-  /** X position on canvas */
-  x?: number
-  /** Y position on canvas */
-  y?: number
-  /** Size of the compass indicator */
+  /** Size of the compass indicator in px */
   size?: number
 }
 
-export function NorthArrow({ rotationDegrees, x = 20, y = 20, size = 28 }: NorthArrowProps) {
-  // The arrow shows where north is relative to the garden's rotation.
-  // If the garden is rotated clockwise by rotationDegrees, north appears
-  // counter-clockwise by that amount from the top of the canvas.
-  const rotation = -rotationDegrees
-  const half = size / 2
-  const cx = x + half
-  const cy = y + half
+/** HTML-based north arrow that always points up — rendered outside the Konva canvas */
+export function NorthArrow({ size = 36 }: NorthArrowProps) {
+  const pad = 12 // top padding for "N" label
+  const r = (size - 2) / 2
+  const cx = size / 2
+  const cy = pad + r
+  const totalHeight = pad + size
 
   return (
-    <Group rotation={rotation} offsetX={cx} offsetY={cy} x={cx} y={cy}>
-      {/* Background circle */}
-      <Circle
+    <svg
+      width={size}
+      height={totalHeight}
+      viewBox={`0 0 ${size} ${totalHeight}`}
+      aria-label="North indicator"
+      role="img"
+      style={{ display: 'block' }}
+    >
+      {/* "N" label — above the circle */}
+      <text
         x={cx}
-        y={cy}
-        radius={half}
+        y={2}
+        textAnchor="middle"
+        fontSize={11}
+        fontWeight="bold"
+        fill="#166534"
+        dominantBaseline="hanging"
+      >
+        N
+      </text>
+
+      {/* Background circle */}
+      <circle
+        cx={cx}
+        cy={cy}
+        r={r}
         fill="rgba(255,255,255,0.85)"
         stroke="#166534"
         strokeWidth={1.5}
       />
 
-      {/* Arrow pointing up (north) — red half */}
-      <Line
-        points={[cx, cy - half + 5, cx - 5, cy, cx, cy - 3]}
+      {/* North arrow (red) — full symmetric triangle */}
+      <polygon
+        points={`${cx},${cy - r + 3} ${cx - 5},${cy} ${cx + 5},${cy}`}
         fill="#ef4444"
-        closed
         stroke="#b91c1c"
         strokeWidth={0.5}
       />
 
-      {/* Arrow pointing down (south) — gray half */}
-      <Line
-        points={[cx, cy + half - 5, cx + 5, cy, cx, cy + 3]}
+      {/* South arrow (gray) — full symmetric triangle */}
+      <polygon
+        points={`${cx},${cy + r - 3} ${cx - 5},${cy} ${cx + 5},${cy}`}
         fill="#9ca3af"
-        closed
         stroke="#6b7280"
         strokeWidth={0.5}
       />
-
-      {/* "N" label */}
-      <Text
-        x={cx - 5}
-        y={cy - half - 1}
-        text="N"
-        fontSize={9}
-        fontStyle="bold"
-        fill="#166534"
-        align="center"
-        width={10}
-      />
-    </Group>
+    </svg>
   )
 }
