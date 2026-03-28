@@ -25,6 +25,7 @@ import {
   getHeightSuggestions,
   getSunZoneSuggestions,
   getShadeZoneSuggestions,
+  getCompanionSuggestions,
   autoOptimizeLayout,
   CELLS_PER_FOOT,
 } from '@/lib/garden-utils'
@@ -241,6 +242,7 @@ export default function GardenDetailPage() {
     ...getHeightSuggestions(garden, garden.layout ?? [], plants),
     ...getSunZoneSuggestions(garden.layout ?? [], plants),
     ...getShadeZoneSuggestions(garden.layout ?? [], plants, shadeZones),
+    ...getCompanionSuggestions(garden.layout ?? [], plants),
   ]
 
   const hemisphereLabel = garden.hemisphere === 'southern' ? '🌍 Southern' : '🌍 Northern'
@@ -252,8 +254,8 @@ export default function GardenDetailPage() {
           <div>
             <Title order={2}>🏡 {garden.name}</Title>
             <Text size="sm" c="dimmed">
-              {garden.width}×{garden.length} ft · {garden.rotationDegrees}° rotation · {hemisphereLabel} ·{' '}
-              {garden.type === 'raised' ? 'Raised Bed' : garden.type}
+              {garden.width}×{garden.length} ft · {garden.rotationDegrees}° rotation ·{' '}
+              {hemisphereLabel} · {garden.type === 'raised' ? 'Raised Bed' : garden.type}
             </Text>
           </div>
           <Group gap="xs">

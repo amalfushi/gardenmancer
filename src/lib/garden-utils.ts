@@ -400,6 +400,66 @@ export function gridDistance(x1: number, y1: number, x2: number, y2: number): nu
   return Math.sqrt(dx * dx + dy * dy)
 }
 
+/** Get companion planting suggestions for the current layout */
+export function getCompanionSuggestions(
+  placements: PlantPlacement[],
+  plantCatalog: Plant[],
+): Suggestion[] {
+  const suggestions: Suggestion[] = []
+  const findPlant = (id: string) => plantCatalog.find((p) => p.id === id)
+
+  // Track which companion pairs we've already reported
+  const reported = new Set<string>()
+
+  for (const placement of placements) {
+    const plant = findPlant(placement.plantId)
+    if (!plant || plant.companionPlants.length === 0) continue
+
+    for (const companionId of plant.companionPlants) {
+      const companion = findPlant(companionId)
+      if (!companion) continue
+
+      // Deduplicate: only report each pair once
+      const pairKey = [plant.id, companion.id].sort().join(':')
+      if (reported.has(pairKey)) continue
+      reported.add(pairKey)
+
+      // Check if companion is in the garden
+      const companionPlacement = placements.find((p) => p.plantId === companionId)
+      if (companionPlacement) {
+        const dist = gridDistance(
+          placement.gridX,
+          placement.gridY,
+          companionPlacement.gridX,
+          companionPlacement.gridY,
+        )
+        if (dist <= 3) {
+          suggestions.push({
+            type: 'companion',
+            message: `${plant.name} and ${companion.name} are companion planted together — great pairing!`,
+            severity: 'success',
+          })
+        } else {
+          suggestions.push({
+            type: 'companion',
+            message: `${plant.name} and ${companion.name} are companions — move them within 2-3 cells of each other.`,
+            severity: 'info',
+          })
+        }
+      } else {
+        // Companion not in garden — suggest adding it
+        suggestions.push({
+          type: 'companion',
+          message: `Consider adding ${companion.name} — it's a great companion for ${plant.name}.`,
+          severity: 'info',
+        })
+      }
+    }
+  }
+
+  return suggestions
+}
+
 /**
  * Auto-optimize a garden layout.
  * Steps:
@@ -410,7 +470,8 @@ export function gridDistance(x1: number, y1: number, x2: number, y2: number): nu
  * 5. Group companion plants together (within 2-3 cells)
  * 6. Separate antagonist plants (>4 cells apart)
  * 7. Apply spacing rules (with raised bed multiplier)
- * 8. Score layout and suggest improvements
+ * 8. Distribute plants evenly across the entire garden
+ * 9. Score layout and suggest improvements
  */
 export function autoOptimizeLayout(
   garden: Garden,
@@ -455,52 +516,35 @@ export function autoOptimizeLayout(
     return hemisphere === 'northern' ? northProjection : -northProjection
   }
 
-  function findBestPosition(plant: Plant): { gridX: number; gridY: number } | null {
-    const spacingCells = getSpacingInCells(plant, garden.type)
-    const minDist = spacingCells / 2
+  // Even distribution: compute ideal grid positions for N plants across the garden.
+  // Divide the garden into a grid with even spacing between plants.
+  const totalPlants = sorted.length
+  const aspectRatio = cols / rows
+  const plantCols = Math.max(1, Math.ceil(Math.sqrt(totalPlants * aspectRatio)))
+  const plantRows = Math.max(1, Math.ceil(totalPlants / plantCols))
+  const colSpacing = cols / (plantCols + 1)
+  const rowSpacing = rows / (plantRows + 1)
 
-    const isTall = plant.heightCategory === 'tall' || plant.heightCategory === 'vine'
-    const isShadeLoving = plant.sunNeeds === 'shade' || plant.sunNeeds === 'partial'
-
-    // If shade-loving and shade zones exist, try shade zones first
-    if (isShadeLoving && shadeZones.length > 0) {
-      for (const zone of shadeZones) {
-        for (let y = zone.y; y < zone.y + zone.height && y < rows; y++) {
-          for (let x = zone.x; x < zone.x + zone.width && x < cols; x++) {
-            if (!occupied.has(key(x, y)) && hasEnoughSpace(x, y, minDist)) {
-              return { gridX: x, gridY: y }
-            }
-          }
-        }
-      }
+  // Generate evenly spaced target positions
+  const targetPositions: { gridX: number; gridY: number }[] = []
+  for (let r = 1; r <= plantRows; r++) {
+    for (let c = 1; c <= plantCols; c++) {
+      if (targetPositions.length >= totalPlants) break
+      targetPositions.push({
+        gridX: Math.round(c * colSpacing),
+        gridY: Math.round(r * rowSpacing),
+      })
     }
-
-    // Build candidate list sorted by sun-away score.
-    // Tall plants get highest score first (away from sun).
-    // Short plants get lowest score first (closer to sun).
-    const candidates: { gridX: number; gridY: number; score: number }[] = []
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < cols; x++) {
-        if (!occupied.has(key(x, y))) {
-          candidates.push({ gridX: x, gridY: y, score: sunAwayScore(x, y) })
-        }
-      }
-    }
-
-    if (isTall) {
-      candidates.sort((a, b) => b.score - a.score)
-    } else {
-      candidates.sort((a, b) => a.score - b.score)
-    }
-
-    for (const pos of candidates) {
-      if (hasEnoughSpace(pos.gridX, pos.gridY, minDist)) {
-        return { gridX: pos.gridX, gridY: pos.gridY }
-      }
-    }
-
-    return null
   }
+
+  // Clamp targets to grid bounds
+  for (const pos of targetPositions) {
+    pos.gridX = Math.max(0, Math.min(cols - 1, pos.gridX))
+    pos.gridY = Math.max(0, Math.min(rows - 1, pos.gridY))
+  }
+
+  // Sort target positions by sun-away score (descending) so tall plants get the sun-away spots
+  targetPositions.sort((a, b) => sunAwayScore(b.gridX, b.gridY) - sunAwayScore(a.gridX, a.gridY))
 
   function hasEnoughSpace(gridX: number, gridY: number, minDist: number): boolean {
     for (const p of layout) {
@@ -515,9 +559,65 @@ export function autoOptimizeLayout(
     return true
   }
 
-  // Place each plant
-  for (const plant of sorted) {
-    const pos = findBestPosition(plant)
+  function findNearestValid(
+    targetX: number,
+    targetY: number,
+    minDist: number,
+    preferShade: boolean,
+  ): { gridX: number; gridY: number } | null {
+    // If shade-loving and shade zones exist, try shade zones first
+    if (preferShade && shadeZones.length > 0) {
+      let bestShade: { gridX: number; gridY: number; dist: number } | null = null
+      for (const zone of shadeZones) {
+        for (let y = zone.y; y < zone.y + zone.height && y < rows; y++) {
+          for (let x = zone.x; x < zone.x + zone.width && x < cols; x++) {
+            if (!occupied.has(key(x, y)) && hasEnoughSpace(x, y, minDist)) {
+              const d = gridDistance(targetX, targetY, x, y)
+              if (!bestShade || d < bestShade.dist) {
+                bestShade = { gridX: x, gridY: y, dist: d }
+              }
+            }
+          }
+        }
+      }
+      if (bestShade) return { gridX: bestShade.gridX, gridY: bestShade.gridY }
+    }
+
+    // Spiral search outward from target position
+    if (!occupied.has(key(targetX, targetY)) && hasEnoughSpace(targetX, targetY, minDist)) {
+      return { gridX: targetX, gridY: targetY }
+    }
+
+    for (let radius = 1; radius < Math.max(cols, rows); radius++) {
+      for (let dy = -radius; dy <= radius; dy++) {
+        for (let dx = -radius; dx <= radius; dx++) {
+          if (Math.abs(dx) !== radius && Math.abs(dy) !== radius) continue
+          const x = targetX + dx
+          const y = targetY + dy
+          if (x >= 0 && x < cols && y >= 0 && y < rows) {
+            if (!occupied.has(key(x, y)) && hasEnoughSpace(x, y, minDist)) {
+              return { gridX: x, gridY: y }
+            }
+          }
+        }
+      }
+    }
+
+    return null
+  }
+
+  // Place each plant at or near its target position
+  for (let i = 0; i < sorted.length; i++) {
+    const plant = sorted[i]
+    const spacingCells = getSpacingInCells(plant, garden.type)
+    const minDist = spacingCells / 2
+    const isShadeLoving = plant.sunNeeds === 'shade' || plant.sunNeeds === 'partial'
+    const target = targetPositions[i] ?? {
+      gridX: Math.floor(cols / 2),
+      gridY: Math.floor(rows / 2),
+    }
+
+    const pos = findNearestValid(target.gridX, target.gridY, minDist, isShadeLoving)
     if (pos) {
       layout.push({ plantId: plant.id, gridX: pos.gridX, gridY: pos.gridY })
       occupied.add(key(pos.gridX, pos.gridY))

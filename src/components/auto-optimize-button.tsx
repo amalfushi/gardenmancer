@@ -1,8 +1,8 @@
 'use client'
 
 import { Alert, Button, Group, Stack, Text, Title, Badge } from '@mantine/core'
-import { useState } from 'react'
-import type { OptimizationResult } from '@/types'
+import { useMemo, useState } from 'react'
+import type { OptimizationResult, OptimizationSuggestion } from '@/types'
 
 export interface AutoOptimizeButtonProps {
   onOptimize: () => OptimizationResult | null
@@ -13,6 +13,38 @@ const severityConfig: Record<string, { color: string; icon: string }> = {
   info: { color: 'blue', icon: 'ℹ️' },
   warning: { color: 'yellow', icon: '⚠️' },
   success: { color: 'green', icon: '✅' },
+}
+
+/** Deduplicate suggestions: one summary per type+plant combination, merge cells/need info */
+function deduplicateSuggestions(suggestions: OptimizationSuggestion[]): OptimizationSuggestion[] {
+  const seen = new Map<string, OptimizationSuggestion>()
+
+  for (const s of suggestions) {
+    // Build a dedup key from type + sorted plant names mentioned in the message
+    const plantNames = s.message.match(/^([A-Z][a-z]+(?:\s[A-Z][a-z]+)*)/)?.[1] ?? ''
+    const key = `${s.type}:${plantNames}`
+
+    if (!seen.has(key)) {
+      seen.set(key, { ...s })
+    } else {
+      // Merge: combine spacing details (e.g., "X cells, need Y") into existing entry
+      const existing = seen.get(key)!
+      if (
+        s.type === 'spacing' &&
+        existing.type === 'spacing' &&
+        !existing.message.includes(' | ')
+      ) {
+        // Already have one spacing entry for these plants — skip duplicate
+      }
+      // Keep the higher severity
+      const severityRank: Record<string, number> = { success: 0, info: 1, warning: 2 }
+      if ((severityRank[s.severity] ?? 0) > (severityRank[existing.severity] ?? 0)) {
+        existing.severity = s.severity
+      }
+    }
+  }
+
+  return Array.from(seen.values())
 }
 
 export function AutoOptimizeButton({ onOptimize, onApply }: AutoOptimizeButtonProps) {
@@ -38,6 +70,11 @@ export function AutoOptimizeButton({ onOptimize, onApply }: AutoOptimizeButtonPr
     setShowResults(false)
     setResult(null)
   }
+
+  const dedupedSuggestions = useMemo(
+    () => (result ? deduplicateSuggestions(result.suggestions) : []),
+    [result],
+  )
 
   return (
     <Stack gap="sm">
@@ -70,37 +107,6 @@ export function AutoOptimizeButton({ onOptimize, onApply }: AutoOptimizeButtonPr
               size="xs"
               color="green"
               onClick={handleApply}
-              aria-label="Apply optimized layout (top)"
-            >
-              Apply Layout
-            </Button>
-            <Button
-              size="xs"
-              variant="subtle"
-              color="gray"
-              onClick={handleDismiss}
-              aria-label="Dismiss optimization results (top)"
-            >
-              Dismiss
-            </Button>
-          </Group>
-
-          {result.suggestions.map((suggestion, idx) => {
-            const config = severityConfig[suggestion.severity] ?? severityConfig.info
-            return (
-              <Alert key={idx} color={config.color} variant="light" p="xs">
-                <Text size="xs">
-                  {config.icon} {suggestion.message}
-                </Text>
-              </Alert>
-            )
-          })}
-
-          <Group gap="xs">
-            <Button
-              size="xs"
-              color="green"
-              onClick={handleApply}
               aria-label="Apply optimized layout"
             >
               Apply Layout
@@ -115,6 +121,17 @@ export function AutoOptimizeButton({ onOptimize, onApply }: AutoOptimizeButtonPr
               Dismiss
             </Button>
           </Group>
+
+          {dedupedSuggestions.map((suggestion, idx) => {
+            const config = severityConfig[suggestion.severity] ?? severityConfig.info
+            return (
+              <Alert key={idx} color={config.color} variant="light" p="xs">
+                <Text size="xs">
+                  {config.icon} {suggestion.message}
+                </Text>
+              </Alert>
+            )
+          })}
         </Stack>
       )}
     </Stack>
