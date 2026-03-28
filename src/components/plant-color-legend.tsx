@@ -3,8 +3,8 @@
 import { Group, Badge, Paper, Text, Stack } from '@mantine/core'
 
 const PLANT_COLORS: Record<string, { color: string; label: string }> = {
-  ground: { color: '#22c55e', label: 'Ground Cover' },
-  short: { color: '#4ade80', label: 'Short' },
+  ground: { color: '#8B4513', label: 'Ground Cover' },
+  short: { color: '#22c55e', label: 'Short' },
   medium: { color: '#f59e0b', label: 'Medium' },
   tall: { color: '#ef4444', label: 'Tall' },
   vine: { color: '#8b5cf6', label: 'Vine' },

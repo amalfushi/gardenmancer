@@ -371,6 +371,7 @@ export default function GardenDetailPage() {
               gardenType={garden.type}
               rotationDegrees={garden.rotationDegrees}
               fullscreen={fullscreen}
+              onExitFullscreen={() => setFullscreen(false)}
             />
           </Grid.Col>
         </Grid>

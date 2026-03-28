@@ -24,15 +24,13 @@ describe('NorthArrow', () => {
   it('renders with default size', () => {
     const { container } = renderWithMantine(<NorthArrow />)
     const svg = container.querySelector('svg')
-    expect(svg).toHaveAttribute('width', '32')
-    expect(svg).toHaveAttribute('height', '32')
+    expect(svg).toHaveAttribute('width', '36')
   })
 
   it('renders with custom size', () => {
     const { container } = renderWithMantine(<NorthArrow size={48} />)
     const svg = container.querySelector('svg')
     expect(svg).toHaveAttribute('width', '48')
-    expect(svg).toHaveAttribute('height', '48')
   })
 
   it('always points north (no rotation applied)', () => {

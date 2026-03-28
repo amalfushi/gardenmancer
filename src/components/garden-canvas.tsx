@@ -38,11 +38,13 @@ export interface GardenCanvasProps {
   rotationDegrees?: number
   /** Whether the canvas is in fullscreen mode */
   fullscreen?: boolean
+  /** Callback to exit fullscreen mode */
+  onExitFullscreen?: () => void
 }
 
 const PLANT_COLORS: Record<string, string> = {
-  ground: '#22c55e',
-  short: '#4ade80',
+  ground: '#8B4513',
+  short: '#22c55e',
   medium: '#f59e0b',
   tall: '#ef4444',
   vine: '#8b5cf6',
@@ -78,6 +80,7 @@ export function GardenCanvas({
   gardenType,
   rotationDegrees = 0,
   fullscreen = false,
+  onExitFullscreen,
 }: GardenCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
@@ -244,7 +247,7 @@ export function GardenCanvas({
       role="img"
       aria-label={`Garden layout canvas, ${width} by ${length} feet, rotated ${rotationDegrees}°, with ${plants.length} plant${plants.length !== 1 ? 's' : ''} placed`}
     >
-      {/* Header row: legend left, north arrow right */}
+      {/* Header row: legend left, north arrow + exit fullscreen right */}
       <div
         style={{
           display: 'flex',
@@ -254,7 +257,25 @@ export function GardenCanvas({
         }}
       >
         <PlantColorLegend />
-        <NorthArrow size={32} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {fullscreen && onExitFullscreen && (
+            <button
+              onClick={onExitFullscreen}
+              aria-label="Exit fullscreen"
+              style={{
+                padding: '4px 12px',
+                fontSize: 13,
+                borderRadius: 6,
+                border: '1px solid #ccc',
+                background: '#fff',
+                cursor: 'pointer',
+              }}
+            >
+              ✕ Exit Fullscreen
+            </button>
+          )}
+          <NorthArrow size={32} />
+        </div>
       </div>
 
       <Stage
