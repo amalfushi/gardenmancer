@@ -56,9 +56,7 @@ describe('AutoOptimizeButton', () => {
     renderWithMantine(<AutoOptimizeButton onOptimize={() => mockResult} onApply={onApply} />)
 
     await user.click(screen.getByRole('button', { name: /auto-optimize layout/i }))
-    const applyButtons = screen.getAllByRole('button', { name: /apply optimized layout/i })
-    expect(applyButtons).toHaveLength(2)
-    await user.click(applyButtons[0])
+    await user.click(screen.getByRole('button', { name: /apply optimized layout/i }))
 
     expect(onApply).toHaveBeenCalledWith(mockResult)
   })
@@ -71,8 +69,7 @@ describe('AutoOptimizeButton', () => {
     await user.click(screen.getByRole('button', { name: /auto-optimize layout/i }))
     expect(screen.getByText('Optimization Results')).toBeInTheDocument()
 
-    const dismissButtons = screen.getAllByRole('button', { name: /dismiss/i })
-    await user.click(dismissButtons[0])
+    await user.click(screen.getByRole('button', { name: /dismiss/i }))
     expect(screen.queryByText('Optimization Results')).not.toBeInTheDocument()
   })
 
